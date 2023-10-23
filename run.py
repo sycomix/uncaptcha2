@@ -100,7 +100,7 @@ def runCap():
 	try:
 		print("Removing old files...")
 		os.system('rm ./audio.wav 2>/dev/null') # These files may be left over from previous runs, and should be removed just in case.
-		os.system('rm ' + DOWNLOAD_LOCATION + 'audio.mp3 2>/dev/null')
+		os.system(f'rm {DOWNLOAD_LOCATION}audio.mp3 2>/dev/null')
 		# First, download the file
 		downloadResult = downloadCaptcha()
 		if downloadResult == 2:
@@ -111,10 +111,12 @@ def runCap():
 			pyautogui.moveTo(CLOSE_LOCATION)
 			pyautogui.click()
 			return 3
-		
+
 		# Convert the file to a format our APIs will understand
 		print("Converting Captcha...")
-		os.system("echo 'y' | ffmpeg -i " + DOWNLOAD_LOCATION + "audio.mp3 ./audio.wav 2>/dev/null")
+		os.system(
+			f"echo 'y' | ffmpeg -i {DOWNLOAD_LOCATION}audio.mp3 ./audio.wav 2>/dev/null"
+		)
 		with sr.AudioFile('./audio.wav') as source:
 			audio = r.record(source)
 
@@ -134,9 +136,7 @@ def runCap():
 
 		print("Verifying Answer")
 		time.sleep(2)
-		# Check that the captcha is completed
-		result = checkCaptcha()
-		return result
+		return checkCaptcha()
 	except Exception as e:
 		pyautogui.moveTo(CLOSE_LOCATION)
 		pyautogui.click()
@@ -158,6 +158,8 @@ if __name__ == '__main__':
 		else:
 			fail += 1
 
-		print("SUCCESSES: " + str(success) + " FAILURES: " + str(fail) + " Allowed: " + str(allowed))
+		print(
+			f"SUCCESSES: {str(success)} FAILURES: {str(fail)} Allowed: {str(allowed)}"
+		)
 		pyautogui.moveTo(CLOSE_LOCATION)
 		pyautogui.click()
